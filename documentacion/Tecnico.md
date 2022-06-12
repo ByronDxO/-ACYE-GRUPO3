@@ -332,7 +332,175 @@ void metodoMensaje(){
   }
 }
 ```
+### SABORES
+Metodo de choose code , para poder seleccionar el codigo que se esta escribiendo por medio del teclado 
+```c++
+void choose_code(char key){
+  
+  if (flag_choose_icecream){
+    
+    if (cont_code<2) {
+      if(cont_code == 0){ lcd.clear(); }
+      lcd.setCursor(0,0);
+      lcd.print("Sabor No. " + String(cont_sabor));
+      lcd.setCursor(cont_code,1);
+      lcd.print(key);
+      conca_matrix += String(key);
+      cont_code++;
+      
+    } else {
+      lcd.setCursor(cont_code,1);
+      lcd.print(key);
+      conca_matrix += String(key);
+      cont_code=0;
+      switch_code();
+    }
+  }
+}
+```
+Metodo de Switch_code sirve para iniciliazar las concatenaciones 
+```c++
+void switch_code(){
+  if(flag_choose_icecream){
+    EEPROM.get(eeAddress, MyStructValue);
+    switch(conca_matrix.toInt()){
+      case 167: // sabor 1 
+        if (MyStructValue.icecream0 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          MyStructValue.icecream0--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
+          if (cont_sabor == 1) { bola1 = conca_matrix.toInt();
+            Serial.print("Bola 1: "); Serial.println(conca_matrix.toInt()); 
+          }else if(cont_sabor == 2){ bola2 = conca_matrix.toInt();
+            Serial.print("Bola 2: "); Serial.println(conca_matrix.toInt());
+          }else if(cont_sabor == 3){ bola3 = conca_matrix.toInt();
+            Serial.print("Bola 3: "); Serial.println(conca_matrix.toInt());;
+          }
+          Serial.println("HELADO 1: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream0)); cont_sabor++;
+        }
+        break;
+      case 267: // sabor 2
+        if (MyStructValue.icecream1 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          MyStructValue.icecream1--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
+          if (cont_sabor == 1) { bola1 = conca_matrix.toInt();
+            Serial.print("Bola 1: "); Serial.println(conca_matrix.toInt()); 
+          }else if(cont_sabor == 2){ bola2 = conca_matrix.toInt();
+            Serial.print("Bola 2: "); Serial.println(conca_matrix.toInt());
+          }else if(cont_sabor == 3){ bola3 = conca_matrix.toInt();
+            Serial.print("Bola 3: "); Serial.println(conca_matrix.toInt());;
+          }
+          Serial.println("HELADO 2: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream1)); cont_sabor++;
+          
+        }
+        break;
+      case 367: // sabor 3
+        if (MyStructValue.icecream2 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          MyStructValue.icecream2--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
+          if (cont_sabor == 1) { bola1 = conca_matrix.toInt();
+            Serial.print("Bola 1: "); Serial.println(conca_matrix.toInt()); 
+          }else if(cont_sabor == 2){ bola2 = conca_matrix.toInt();
+            Serial.print("Bola 2: "); Serial.println(conca_matrix.toInt());
+          }else if(cont_sabor == 3){ bola3 = conca_matrix.toInt();
+            Serial.print("Bola 3: "); Serial.println(conca_matrix.toInt());;
+          }
+          Serial.println("HELADO 3: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream2)); cont_sabor++;
+        }
+        break;
+      case 467: // sabor 4
+        if (MyStructValue.icecream3 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          MyStructValue.icecream3--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
+          if (cont_sabor == 1) { bola1 = conca_matrix.toInt();
+            Serial.print("Bola 1: "); Serial.println(conca_matrix.toInt()); 
+          }else if(cont_sabor == 2){ bola2 = conca_matrix.toInt();
+            Serial.print("Bola 2: "); Serial.println(conca_matrix.toInt());
+          }else if(cont_sabor == 3){ bola3 = conca_matrix.toInt();
+            Serial.print("Bola 3: "); Serial.println(conca_matrix.toInt());;
+          }
+          Serial.println("HELADO 4: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream3)); cont_sabor++;
+        }
+        break;
+      case 567: // sabor 5
+        if (MyStructValue.icecream4 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          MyStructValue.icecream4--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
+          if (cont_sabor == 1) { bola1 = conca_matrix.toInt();
+            Serial.print("Bola 1: "); Serial.println(conca_matrix.toInt()); 
+          }else if(cont_sabor == 2){ bola2 = conca_matrix.toInt();
+            Serial.print("Bola 2: "); Serial.println(conca_matrix.toInt());
+          }else if(cont_sabor == 3){ bola3 = conca_matrix.toInt();
+            Serial.print("Bola 3: "); Serial.println(conca_matrix.toInt());;
+          }
+          Serial.println("HELADO 5: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream4)); cont_sabor++;
+        }
+        break;
+      default:
+        show_message_code_mistake();
+        break;
+    }
+  }
+  
+  conca_matrix = "";
+  delay(1000);
+  lcd.clear();
 
+  if (valor_vaso_definitivo < cont_sabor) {   
+    cont_sabor = 1;
+    flag_choose_icecream=false ;
+    
+    Serial.println("Precio: " + String(money_vaso));
+    EEPROM.get(eeAddress, MyStructValue); MyStructValue.money += money_vaso; EEPROM.put(eeAddress, MyStructValue); 
+    money_vaso = 0.0;
+    tamanio = valor_vaso_definitivo;
+    Serial.println("Bola 1: " + String(bola1));
+    Serial.println("Bola 2: " + String(bola2));
+    Serial.println("Bola 3: " + String(bola3));
+    Serial.println("Tam: " + String(valor_vaso_definitivo));
+    servirHelado();
+    valor_vaso_definitivo = 0;
+    if(precio_vaso_1){
+      reset();
+    }
+    
+  } else {
+      lcd.setCursor(0,0);
+      lcd.print("Sabor No. " + String(cont_sabor));
+    
+  }
+  
+}
+
+
+```
+
+Mostrar Error de codigo de helado 
+```c++
+void show_message_code_mistake(){
+  Serial.println("Codigo de Sabor: " + String(conca_matrix));
+  lcd.setCursor(0,0);
+  lcd.print("NO EXISTE ESE");
+  lcd.setCursor(0,1);
+  lcd.print("CODIGO DE SABOR");
+}
+```
+
+Mostrar mensaje de falta de inventario de helado 
+```c++
+void show_message_inventary_mistake(){
+  Serial.println("NO HAY STOCK");
+  lcd.setCursor(0,0);
+  lcd.print("NO HAY STOCK");
+  lcd.setCursor(0,1);
+  lcd.print("DE ESE SABOR");
+}
+
+```
 ### APP
 
 La app fue desarrolada en [MIT App Inventor](https://appinventor.mit.edu/)
