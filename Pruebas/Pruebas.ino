@@ -2,7 +2,7 @@
 
 //Configuraciones del motor con driver
 int stepsPerRevolution = 100;
-int motSpeed = 4; //4
+int motSpeed = 4;
 Stepper myStepper(stepsPerRevolution,10,11,12,13);
 
 //Tiempor para ejecucion simultanea
