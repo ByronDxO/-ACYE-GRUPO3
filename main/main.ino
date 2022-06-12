@@ -80,8 +80,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  metodoMensaje();
-
+  
   if (Serial1.available() > 0) {
       char readed = Serial1.read();
 
@@ -140,8 +139,69 @@ void loop() {
   }
 
 }
+// meteodo seleccionar vaso 
+boolean bandera_vaso = false ; 
+int valor_vaso = 0 ;
+unsigned long timer_vaso = 0 ;
+boolean bandera_precio_vaso = false;
+void getVaso(){
+  if(bandera_precio_vaso != true){
+    if(bandera_vaso != true){
+    lcd.clear();
+    lcd.setCursor(1,0);
+  lcd.print("seleccione el");
+  lcd.setCursor(0,1);
+  lcd.print("vaso:");
+  bandera_vaso = true;
+  }
+  
+  } 
+  
+  valor_vaso = getTeclado();
+  postPrecioVaso(valor_vaso);
+}
+// switch para tamaño vaso y precio 
+boolean vaso_limpiar = false;
+void postPrecioVaso(char x){
+  bandera_precio_vaso = true;
+  if(vaso_limpiar != true && bandera_vaso != false){
+    lcd.clear();
+    vaso_limpiar=true;
+  }
+  switch (x){
+    case '1':
+    lcd.setCursor(1,0);
+    lcd.print("precio: 20");
+    valor_vaso=0;
+    break;
+    case '2':
+    lcd.setCursor(1,0);
+    lcd.print("precio: 30");
+    valor_vaso=0;
+    break;
+    case '3':
+    lcd.setCursor(1,0);
+    lcd.print("precio: 40");
+    valor_vaso=0;
+    break;
+  }
+}
+/// metodo para retornar un numero 
+int getTeclado(){
+   if (millis() > time_matrix + 10){
+    time_matrix = millis();
 
+    char key = keypad.getKey();
+    if (key) {
+      Serial.println(key);
+      lcd.setCursor(14,1);
+      lcd.print(key);
+      return int(key);
+    }
+  }
+}
 /* PANTALLA LCD */
+
 void metodoTeclado(){
    if (millis() > time_matrix + 10){
     time_matrix = millis();
@@ -149,6 +209,8 @@ void metodoTeclado(){
     char key = keypad.getKey();
     if (key) {
       Serial.println(key);
+      lcd.setCursor(0,1);
+      lcd.print(key);
       choose_code(key);
     }
   }
@@ -175,7 +237,8 @@ void metodoMensaje(){
         mensaje = false ; 
       }
       lcd.setCursor(2,1);
-      metodoTeclado();
+    //  metodoTeclado();
+    getVaso();
     }
   }
 }
