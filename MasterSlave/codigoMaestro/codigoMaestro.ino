@@ -1,20 +1,13 @@
-
-#include <MatrizLed.h>
-
-#include <Keypad.h>
 /* Pantalla Led */
 #include<LedControl.h>
 #include <LiquidCrystal_I2C.h>
 
-#include<LedControl.h>
-
 /* Teclado Matricial */
 #include <Keypad.h>
 
-LiquidCrystal_I2C lcd(0x27,20,4);
-unsigned long contador_1  = 0; 
 /* TIME */
 unsigned long time_matrix = 0;
+unsigned long contador_1  = 0; 
 
 /* Variables */
 int contador = 0 ; 
@@ -33,10 +26,9 @@ char keys[matrix_row][matrix_column] = {
 const byte matrix_row_pin[matrix_row]       = { 30, 31, 32, 33};
 const byte matrix_column_pin[matrix_column] = { 34, 35, 36};
 
-
-
-
+/* Declaration */
 Keypad keypad = Keypad(makeKeymap(keys), matrix_row_pin, matrix_column_pin, matrix_row, matrix_column);
+LiquidCrystal_I2C lcd(0x27,20,4);
 
 void setup() {
   Serial.begin(9600);
@@ -46,12 +38,9 @@ void setup() {
 }
 
 void loop() {
-  
- //Serial.println("hola");
- metodoMensaje();
- 
- 
+  metodoMensaje();
 }
+
 void metodoTeclado(){
    if (millis() > time_matrix + 10){
     time_matrix = millis();
