@@ -18,6 +18,31 @@ Libería a Utilizar para EEPROM, encargada de almacenar tanto la cantidad de hel
 #include <EEPROM.h>
 ```
 
+Se define un pin para poder conectar el componente bluethoot.
+```c++
+/* bluetooth */
+#define bluethoot 8
+```
+
+Se define un pin para poder conectar el sensor de temperatura.
+```c++
+/* sensor de temperatura */
+#define pinA1 1
+```
+
+Utilizamos una variable float, para poder obtener el valor en °C.
+```c++
+/* Variables */
+float temperature_C;
+```
+
+Para calcular la temperatura se uso está ecuación:
+```c++
+/* Temperatura */
+temperature_C = analogRead(pinA1);                      // Leemos el sensor por medio de analogRead, se encuentra en un rango de 0 a 1023.
+temperature_C = (5.0 * temperature_C * 100.0)/1024.0;   // Calculamos la temperatura con la fórmula.
+MyStructValue.temperature = temperature_C;
+```
 
 Creación de Struct y Asignación.
 ```c++
