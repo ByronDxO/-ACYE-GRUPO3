@@ -21,6 +21,13 @@ float temperature_C;
 int contador = 0 ; 
 boolean mensaje = false ; 
 
+/************************/
+String conca_matrix; 
+boolean flag_inventary = false;
+boolean flag_choose_icecream = true;
+int cont_code = 0;    // cont del no. de codigo.
+int cont_matrix = 1;  // cont cantidad del code.
+int cont_sabor = 1;   // obtiene el No. de sabor.
 
 /* Create Matrix Keyboard */
 
@@ -51,7 +58,7 @@ struct MyStruct{
 };
 
 /* Assignment Struct */
-MyStruct MyStructValue = {10,10,10,10,10,0.0,0.0};
+MyStruct MyStructValue = {10,10,0,10,10,0.0,0.0};
 
 /* Declaration */
 Keypad keypad = Keypad(makeKeymap(keys), matrix_row_pin, matrix_column_pin, matrix_row, matrix_column);
@@ -73,7 +80,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  metodoMensaje();
 
   if (Serial1.available() > 0) {
       char readed = Serial1.read();
@@ -142,6 +149,7 @@ void metodoTeclado(){
     char key = keypad.getKey();
     if (key) {
       Serial.println(key);
+      choose_code(key);
     }
   }
 }
@@ -170,4 +178,103 @@ void metodoMensaje(){
       metodoTeclado();
     }
   }
+}
+
+
+void choose_code(char key){
+  
+  if (flag_choose_icecream){
+    
+    if (cont_code<2) {
+      if(cont_code == 0){ lcd.clear(); }
+      lcd.setCursor(0,0);
+      lcd.print("Sabor No. " + String(cont_sabor));
+      lcd.setCursor(cont_code,1);
+      lcd.print(key);
+      conca_matrix += String(key);
+      cont_code++;
+      
+    } else {
+      lcd.setCursor(cont_code,1);
+      lcd.print(key);
+      conca_matrix += String(key);
+      cont_code=0;
+      switch_code();
+    }
+  }
+}
+
+
+void switch_code(){
+  if(flag_choose_icecream){
+    EEPROM.put(eeAddress, MyStructValue);
+    switch(conca_matrix.toInt()){
+      case 167: // sabor 1
+        if (MyStructValue.icecream0 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          Serial.println("HELADO 1: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream0)); cont_sabor++;
+        }
+        break;
+      case 267: // sabor 2
+        if (MyStructValue.icecream1 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          Serial.println("HELADO 2: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream1)); cont_sabor++;
+        }
+        break;
+      case 367: // sabor 3
+        if (MyStructValue.icecream2 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          Serial.println("HELADO 3: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream2)); cont_sabor++;
+        }
+        break;
+      case 467: // sabor 4
+        if (MyStructValue.icecream3 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          Serial.println("HELADO 4: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream3)); cont_sabor++;
+        }
+        break;
+      case 567: // sabor 5
+        if (MyStructValue.icecream4 == 0) {
+          Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+        } else {
+          Serial.println("HELADO 5: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream4)); cont_sabor++;
+        }
+        break;
+      default:
+        show_message_code_mistake();
+        break;
+    }
+  }
+  
+  conca_matrix = "";
+  delay(1000);
+  lcd.clear();
+  if (3 < cont_sabor) {
+    cont_sabor = 1;
+  } 
+  lcd.setCursor(0,0);
+  lcd.print("Sabor No. " + String(cont_sabor));
+  
+}
+
+
+
+void show_message_code_mistake(){
+  Serial.println("Codigo de Sabor: " + String(conca_matrix));
+  lcd.setCursor(0,0);
+  lcd.print("NO EXISTE ESE");
+  lcd.setCursor(0,1);
+  lcd.print("CODIGO DE SABOR");
+}
+
+void show_message_inventary_mistake(){
+  Serial.println("NO HAY STOCK");
+  lcd.setCursor(0,0);
+  lcd.print("NO HAY STOCK");
+  lcd.setCursor(0,1);
+  lcd.print("DE ESE SABOR");
 }
