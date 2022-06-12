@@ -1,19 +1,18 @@
-#include <Wire.h> 
+
 #include <MatrizLed.h>
-#include <Key.h>
+
 #include <Keypad.h>
 #include <LiquidCrystal_I2C.h>
-#include <Stepper.h>
-#include <Servo.h>
+
 #include<LedControl.h>
 
 
 LiquidCrystal_I2C lcd(0x27,20,4);
-int contador = 0 ; 
+unsigned long contador  = 0; 
 boolean mensaje = false ; 
 void setup() {
   lcd.begin(16,2);
-  lcd.print("Mancos qliados");
+  lcd.clear();
 
 }
 
@@ -22,11 +21,25 @@ void loop() {
 }
 
 void metodoMensaje(){
-  if(millis()>4000 && mensaje == false){
-    lcd.begin(16,2);
+    
+  if(millis()<contador+1500){
+    if(mensaje != true){
+      contador = millis() + 1500;  
+    }
+       
+    lcd.setCursor(0,0);
     lcd.print("Grupo 3");
-    lcd.begin(16,1);
+    lcd.setCursor(2,1);
     lcd.print("Proyecto 1");
     mensaje = true;
+  }else{
+    if(millis()>contador){
+      if(mensaje == true){
+        lcd.clear();
+        mensaje = false ; 
+      }
+      lcd.setCursor(2,1);
+      lcd.print("iniciando");
+    }
   }
 }
