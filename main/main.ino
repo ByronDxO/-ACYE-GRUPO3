@@ -20,15 +20,15 @@ float temperature_C;
 /************************/
 int contador = 0 ; 
 boolean mensaje = false ; 
-
+boolean bandera_precio_vaso = false;
 /************************/
 String conca_matrix; 
 boolean flag_inventary = false;
-boolean flag_choose_icecream = true;
+boolean flag_choose_icecream = false;
 int cont_code = 0;    // cont del no. de codigo.
 int cont_matrix = 1;  // cont cantidad del code.
 int cont_sabor = 1;   // obtiene el No. de sabor.
-
+int valor_vaso_definitivo = 0 ;
 /* Create Matrix Keyboard */
 
 const byte matrix_row     = 4;
@@ -80,7 +80,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  metodoMensaje();
   if (Serial1.available() > 0) {
       char readed = Serial1.read();
 
@@ -143,48 +143,114 @@ void loop() {
 boolean bandera_vaso = false ; 
 int valor_vaso = 0 ;
 unsigned long timer_vaso = 0 ;
-boolean bandera_precio_vaso = false;
+int flag_vaso = 0 ;
+boolean precio_vaso_1 = false ; 
 void getVaso(){
-  if(bandera_precio_vaso != true){
-    if(bandera_vaso != true){
-    lcd.clear();
-    lcd.setCursor(1,0);
-  lcd.print("seleccione el");
-  lcd.setCursor(0,1);
-  lcd.print("vaso:");
-  bandera_vaso = true;
+    
+      if(bandera_vaso != true){
+      lcd.clear();    
+      }
+      if(flag_vaso == 0 ){
+        lcd.setCursor(1,0);
+      lcd.print("seleccione el");
+      lcd.setCursor(0,1);
+      lcd.print("vaso:");
+      bandera_vaso = true;
+      delay(1000);
+      }
+      
+    
+    
+    
+  
+  if(!precio_vaso_1){
+    valor_vaso = getTeclado();
+    
+    postPrecioVaso(valor_vaso);
   }
+  getTeclado();
   
-  } 
-  
-  valor_vaso = getTeclado();
-  postPrecioVaso(valor_vaso);
 }
 // switch para tamaño vaso y precio 
 boolean vaso_limpiar = false;
+int cerrar_precio = 0 ;
+boolean cerrar_vaso = false ;
 void postPrecioVaso(char x){
-  bandera_precio_vaso = true;
-  if(vaso_limpiar != true && bandera_vaso != false){
+  if(!cerrar_vaso){
+    bandera_precio_vaso = true;
+  if(vaso_limpiar != true && flag_vaso==1){
     lcd.clear();
     vaso_limpiar=true;
   }
+  
   switch (x){
     case '1':
+    valor_vaso_definitivo =1 ;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(x);
+    delay(1000);
+    precio_vaso_1=true;
+    lcd.clear();
     lcd.setCursor(1,0);
     lcd.print("precio: 20");
-    valor_vaso=0;
+    cerrar_vaso= true;
+    flag_vaso = 1;
+    delay(1500);
+    flag_choose_icecream=true ;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Sabor No. " + String(cont_sabor));
     break;
     case '2':
+    valor_vaso_definitivo =2 ;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(x);
+    delay(1000);
+    precio_vaso_1=true;
+    lcd.clear();
     lcd.setCursor(1,0);
     lcd.print("precio: 30");
-    valor_vaso=0;
+    flag_vaso = 1;
+    delay(1500);
+    cerrar_vaso= true;
+    flag_choose_icecream=true ;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Sabor No. " + String(cont_sabor));
     break;
     case '3':
+    valor_vaso_definitivo = 3 ;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(x);
+    delay(1000);
+    precio_vaso_1=true;
+    lcd.clear();
     lcd.setCursor(1,0);
     lcd.print("precio: 40");
-    valor_vaso=0;
+    flag_vaso = 1;
+    delay(1500);
+    cerrar_vaso= true;
+    flag_choose_icecream=true ;
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Sabor No. " + String(cont_sabor));
     break;
   }
+  }
+  
+}
+/// reset 
+void reset(){
+      bandera_vaso = false ; 
+    
+    flag_vaso = 0 ;
+    precio_vaso_1 = false ; 
+    vaso_limpiar = false;
+    
+    cerrar_vaso = false ;
 }
 /// metodo para retornar un numero 
 int getTeclado(){
@@ -196,7 +262,9 @@ int getTeclado(){
       Serial.println(key);
       lcd.setCursor(14,1);
       lcd.print(key);
+      choose_code(key);
       return int(key);
+      
     }
   }
 }
@@ -208,9 +276,8 @@ void metodoTeclado(){
 
     char key = keypad.getKey();
     if (key) {
-      Serial.println(key);
-      lcd.setCursor(0,1);
-      lcd.print(key);
+     
+      
       choose_code(key);
     }
   }
@@ -316,11 +383,19 @@ void switch_code(){
   conca_matrix = "";
   delay(1000);
   lcd.clear();
-  if (3 < cont_sabor) {
+  Serial.print(valor_vaso);
+  if (valor_vaso_definitivo < cont_sabor) {   
     cont_sabor = 1;
-  } 
-  lcd.setCursor(0,0);
-  lcd.print("Sabor No. " + String(cont_sabor));
+    flag_choose_icecream=false ;
+    valor_vaso_definitivo = 0;
+    if(precio_vaso_1){
+      reset();
+    }
+  } else {
+      lcd.setCursor(0,0);
+      lcd.print("Sabor No. " + String(cont_sabor));
+    
+  }
   
 }
 
