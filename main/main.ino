@@ -1,8 +1,12 @@
 #include <EEPROM.h>
 
-
+/* bluetooth */
 #define bluethoot 8
+/* sensor de temperatura */
+#define pinA1 1
 
+/* Variables */
+float temperature_C;
 
 /* Create Struct */
 int eeAddress = 0;
@@ -13,11 +17,11 @@ struct MyStruct{
   int icecream3;
   int icecream4;
   float money;
-  int temperature;
+  float temperature;
 };
 
 /* Assignment */
-MyStruct MyStructValue = {10,10,10,10,10,0.0,20};
+MyStruct MyStructValue = {10,10,10,10,10,0.0,0.0};
 
 void setup() {
   // put your setup code here, to run once:
@@ -42,13 +46,16 @@ void loop() {
       }else if (readed == 'U'){ // UPDATE
         Serial.println("Actualizando Datos");
         EEPROM.get(eeAddress, MyStructValue);     // getStruct
-        boolean flag = false;
-        if (MyStructValue.icecream0 == 0){ MyStructValue.icecream0 = 10; flag = true; }
-        if (MyStructValue.icecream1 == 0){ MyStructValue.icecream1 = 10; flag = true; }
-        if (MyStructValue.icecream2 == 0){ MyStructValue.icecream2 = 10; flag = true; }
-        if (MyStructValue.icecream3 == 0){ MyStructValue.icecream3 = 10; flag = true; }
-        if (MyStructValue.icecream4 == 0){ MyStructValue.icecream4 = 10; flag = true; }
-        if (flag) { EEPROM.put(eeAddress, MyStructValue); flag = false; }
+        
+        /* Temperatura */
+        temperature_C = analogRead(pinA1);                      // Leemos el sensor por medio de analogRead, se encuentra en un rango de 0 a 1023.
+        temperature_C = (5.0 * temperature_C * 100.0)/1024.0;   // Calculamos la temperatura con la fórmula.
+        MyStructValue.temperature = temperature_C;
+        EEPROM.put(eeAddress, MyStructValue);
+        
+        
+        /* Enviar Datos a APP*/
+        EEPROM.get(eeAddress, MyStructValue);     // getStruct
         Serial1.print(String(MyStructValue.icecream0));
         Serial1.print("|");
         Serial1.print(String(MyStructValue.icecream1));
@@ -62,7 +69,18 @@ void loop() {
         Serial1.print(String(MyStructValue.money));
         Serial1.print("|");
         Serial1.print(String(MyStructValue.temperature));
+
+        /* Recargar Stock */
+        boolean flag = false;
+        if (MyStructValue.icecream0 == 0){ MyStructValue.icecream0 = 10; flag = true; }
+        if (MyStructValue.icecream1 == 0){ MyStructValue.icecream1 = 10; flag = true; }
+        if (MyStructValue.icecream2 == 0){ MyStructValue.icecream2 = 10; flag = true; }
+        if (MyStructValue.icecream3 == 0){ MyStructValue.icecream3 = 10; flag = true; }
+        if (MyStructValue.icecream4 == 0){ MyStructValue.icecream4 = 10; flag = true; }
+        if (flag) { EEPROM.put(eeAddress, MyStructValue); flag = false; }
         eeAddress = 0;
+
+        
       }else if (readed == 'O') {
           digitalWrite(bluethoot, HIGH);
           EEPROM.get(eeAddress, MyStructValue);     // getStruct
