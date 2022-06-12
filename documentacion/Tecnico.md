@@ -1,34 +1,60 @@
-# [Manual Ténico - APP]()
+# [Manual Ténico]()
 ______
 
 ## Como Instalar Arduino
 
 - For Windows
-Debe de dirigirse a la Página de arduino con el siguiente enlace.
-https://www.arduino.cc/en/software
-
-
+Debe de dirigirse a la [Página de arduino](https://www.arduino.cc/en/software) con el siguiente enlace.
 ___
 ## Metodos a Utilizar
 ____
 
 ### Arduino
-Libería a Utilizar para EEPROM, encargada de almacenar tanto la cantidad de helados, como la cantidad de dinero recaudado, además de mostrar la temperatura ambiente.
+Libería a Utilizar para EEPROM, encargada de almacenar tanto la cantidad de helados, como la cantidad de dinero recaudado, además de mostrar la temperatura ambiente; otra librería a implentar fue la de LiquidCrystal que sirve para la pantalla led; la librería keypad que sirve para manejar el teclado matricial.
 ```c++
+/* Memoria EEPROM*/
 #include <EEPROM.h>
+/* Pantalla Led */
+#include<LedControl.h>
+#include <LiquidCrystal_I2C.h>
+/* Teclado Matricial */
+#include <Keypad.h>
 ```
 
-Se define un pin para poder conectar el componente bluethoot.
+Se define un pin para poder conectar el componente bluethoot; define un pin para poder conectar el sensor de temperatura.
 ```c++
 /* bluetooth */
 #define bluethoot 8
-```
-
-Se define un pin para poder conectar el sensor de temperatura.
-```c++
 /* sensor de temperatura */
 #define pinA1 1
 ```
+
+
+Variables a utilizar para millis():
+```c++
+unsigned long time_matrix = 0;
+unsigned long contador_1  = 0; 
+```
+
+Estructura para el teclado matricial
+```c++
+const byte matrix_row     = 4;
+const byte matrix_column  = 3;
+ 
+char keys[matrix_row][matrix_column] = {
+   { '1','2','3'},
+   { '4','5','6'},
+   { '7','8','9'},
+   { '*','0','#'}
+};
+
+/* PINES DE TECLADO MATRICIAL */
+const byte matrix_row_pin[matrix_row]       = { 30, 31, 32, 33};
+const byte matrix_column_pin[matrix_column] = { 34, 35, 36};
+```
+
+
+
 
 Utilizamos una variable float, para poder obtener el valor en °C.
 ```c++
@@ -63,7 +89,7 @@ MyStruct MyStructValue = {10,10,10,10,10,0.0,20};
 ```
 
 
-Iniciar Terminal y el componente HC06 - Bluetooth
+Iniciar Terminal y el componente HC06 - Bluetooth; además de agregar la configuración Inicial para la pantalla led.
 ```c++
 void setup() {
   // put your setup code here, to run once:
@@ -73,6 +99,10 @@ void setup() {
 
   /* EEPROM */
   EEPROM.put(eeAddress, MyStructValue);
+
+  /* PANTALLA LED */
+  lcd.begin(16,2);
+  lcd.clear();
 }
 
 ```
@@ -127,6 +157,48 @@ void loop() {
 
   }
 
+}
+```
+
+Metodo que es el encargado de obtener los datos del teclado matricial.
+```c++
+void metodoTeclado(){
+   if (millis() > time_matrix + 10){
+    time_matrix = millis();
+
+    char key = keypad.getKey();
+    if (key) {
+      Serial.println(key);
+    }
+  }
+}
+```
+
+
+Metodo encargado de mostrar el texto en la pantalla Led.
+```c++
+void metodoMensaje(){
+    
+  if(millis()<contador_1+1500){
+    if(mensaje != true){
+      contador_1 = millis() + 1500;  
+    }
+       
+    lcd.setCursor(0,0);
+    lcd.print("Grupo 3");
+    lcd.setCursor(2,1);
+    lcd.print("Proyecto 1");
+    mensaje = true;
+  }else{
+    if(millis()>contador_1){
+      if(mensaje == true){
+        lcd.clear();
+        mensaje = false ; 
+      }
+      lcd.setCursor(2,1);
+      metodoTeclado();
+    }
+  }
 }
 ```
 
