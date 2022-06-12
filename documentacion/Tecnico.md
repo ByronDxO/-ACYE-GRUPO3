@@ -208,23 +208,29 @@ void metodoMensaje(){
 La app fue desarrolada en [MIT App Inventor](https://appinventor.mit.edu/)
 
 Declaracion de variables, para la lista y otros condiciones.
+
 ![app0](img/app/define.png)
 
 
 Se inicio conectado por medio de bloques el bluetooth
 Diseño en proteus.
+
 ![app1](img/app/Conexion.png)
 
 Luego se por medio de un boton se puede conectar al bluetooth
+
 ![app2](img/app/button_connected.png)
 
 
 Ademásse agrego un boton que permite desconectar al bluetooth.
+
 ![app3](img/app/button_disconected.png)
 
 Se creo un boton encargado de actualizar los datos de la APP.
+
 ![app4](img/app/button_update.png)
 
 Para poder recibir los datos se hizo la siguiente estructura, que es la encarga de recibir de arduino a app, primero se guarda en un texto, que por consigueinte, es separada por un split, separada por "|" y es guardada en la lista, que es recorrida desde la posición 1 hasta la 7.
 
 ![app5](img/app/data.png)
+
