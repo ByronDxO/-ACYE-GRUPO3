@@ -334,6 +334,61 @@ void postPrecioVaso(char x){
     lcd.setCursor(0,0);
     lcd.print("Sabor No. " + String(cont_sabor));
     break;
+        case '4':
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("error no");
+    lcd.setCursor(0,1);
+    lcd.print("existe vaso");
+    delay(1000);
+    lcd.clear();
+    break; 
+    case '5':
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("error no");
+    lcd.setCursor(0,1);
+    lcd.print("existe vaso");
+    delay(1000);
+    lcd.clear();
+    break; 
+    case '6':
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("error no");
+    lcd.setCursor(0,1);
+    lcd.print("existe vaso");
+    delay(1000);
+    lcd.clear();
+    break; 
+    case '7':
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("error no");
+    lcd.setCursor(0,1);
+    lcd.print("existe vaso");
+    delay(1000);
+    lcd.clear();
+    break; 
+    case '8':
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("error no");
+    lcd.setCursor(0,1);
+    lcd.print("existe vaso");
+    delay(1000);
+    lcd.clear();
+    break; 
+    case '9':
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("error no");
+    lcd.setCursor(0,1);
+    lcd.print("existe vaso");
+    delay(1000);
+    lcd.clear();
+    break; 
+
   }
   }
   
