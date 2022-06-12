@@ -29,6 +29,7 @@ int cont_code = 0;    // cont del no. de codigo.
 int cont_matrix = 1;  // cont cantidad del code.
 int cont_sabor = 1;   // obtiene el No. de sabor.
 int valor_vaso_definitivo = 0 ;
+float money_vaso = 0.0;
 /* Create Matrix Keyboard */
 
 const byte matrix_row     = 4;
@@ -58,7 +59,8 @@ struct MyStruct{
 };
 
 /* Assignment Struct */
-MyStruct MyStructValue = {10,10,0,10,10,0.0,0.0};
+//MyStruct MyStructValue = {10,10,0,10,10,0.0,0.0};
+MyStruct MyStructValue;
 
 /* Declaration */
 Keypad keypad = Keypad(makeKeymap(keys), matrix_row_pin, matrix_column_pin, matrix_row, matrix_column);
@@ -72,7 +74,7 @@ void setup() {
 
   pinMode(bluethoot, OUTPUT);
   /* EEPROM */
-  EEPROM.put(eeAddress, MyStructValue);
+//  EEPROM.put(eeAddress, MyStructValue);
   /* PANTALLA LCD */
   lcd.begin(16,2);
   lcd.clear();
@@ -95,7 +97,6 @@ void loop() {
         temperature_C = (5.0 * temperature_C * 100.0)/1024.0;   // Calculamos la temperatura con la fórmula.
         MyStructValue.temperature = temperature_C;
         EEPROM.put(eeAddress, MyStructValue);
-        
         
         /* Enviar Datos a APP*/
         EEPROM.get(eeAddress, MyStructValue);     // getStruct
@@ -193,7 +194,7 @@ void postPrecioVaso(char x){
     precio_vaso_1=true;
     lcd.clear();
     lcd.setCursor(1,0);
-    lcd.print("precio: 20");
+    lcd.print("precio: 20"); money_vaso = 20.0;
     cerrar_vaso= true;
     flag_vaso = 1;
     delay(1500);
@@ -211,7 +212,7 @@ void postPrecioVaso(char x){
     precio_vaso_1=true;
     lcd.clear();
     lcd.setCursor(1,0);
-    lcd.print("precio: 30");
+    lcd.print("precio: 30"); money_vaso = 30.0;
     flag_vaso = 1;
     delay(1500);
     cerrar_vaso= true;
@@ -229,7 +230,7 @@ void postPrecioVaso(char x){
     precio_vaso_1=true;
     lcd.clear();
     lcd.setCursor(1,0);
-    lcd.print("precio: 40");
+    lcd.print("precio: 40"); money_vaso = 40.0;
     flag_vaso = 1;
     delay(1500);
     cerrar_vaso= true;
@@ -238,60 +239,6 @@ void postPrecioVaso(char x){
     lcd.setCursor(0,0);
     lcd.print("Sabor No. " + String(cont_sabor));
     break;
-    case '4':
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("error no");
-    lcd.setCursor(0,1);
-    lcd.print("existe vaso");
-    delay(1000);
-    lcd.clear();
-    break; 
-    case '5':
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("error no");
-    lcd.setCursor(0,1);
-    lcd.print("existe vaso");
-    delay(1000);
-    lcd.clear();
-    break; 
-    case '6':
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("error no");
-    lcd.setCursor(0,1);
-    lcd.print("existe vaso");
-    delay(1000);
-    lcd.clear();
-    break; 
-    case '7':
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("error no");
-    lcd.setCursor(0,1);
-    lcd.print("existe vaso");
-    delay(1000);
-    lcd.clear();
-    break; 
-    case '8':
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("error no");
-    lcd.setCursor(0,1);
-    lcd.print("existe vaso");
-    delay(1000);
-    lcd.clear();
-    break; 
-    case '9':
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("error no");
-    lcd.setCursor(0,1);
-    lcd.print("existe vaso");
-    delay(1000);
-    lcd.clear();
-    break; 
   }
   }
   
@@ -391,25 +338,28 @@ void choose_code(char key){
 
 void switch_code(){
   if(flag_choose_icecream){
-    EEPROM.put(eeAddress, MyStructValue);
+    EEPROM.get(eeAddress, MyStructValue);
     switch(conca_matrix.toInt()){
-      case 167: // sabor 1
+      case 167: // sabor 1 
         if (MyStructValue.icecream0 == 0) {
           Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
         } else {
           Serial.println("HELADO 1: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream0)); cont_sabor++;
+          MyStructValue.icecream0--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
         }
         break;
       case 267: // sabor 2
         if (MyStructValue.icecream1 == 0) {
           Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
         } else {
+          MyStructValue.icecream1--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
           Serial.println("HELADO 2: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream1)); cont_sabor++;
         }
         break;
       case 367: // sabor 3
         if (MyStructValue.icecream2 == 0) {
           Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
+          MyStructValue.icecream2--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
         } else {
           Serial.println("HELADO 3: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream2)); cont_sabor++;
         }
@@ -418,6 +368,7 @@ void switch_code(){
         if (MyStructValue.icecream3 == 0) {
           Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
         } else {
+          MyStructValue.icecream3--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
           Serial.println("HELADO 4: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream3)); cont_sabor++;
         }
         break;
@@ -425,6 +376,7 @@ void switch_code(){
         if (MyStructValue.icecream4 == 0) {
           Serial.println("NO HAY EN INVENTARIO"); show_message_inventary_mistake();
         } else {
+          MyStructValue.icecream4--; EEPROM.put(eeAddress, MyStructValue); // reasigno datos 
           Serial.println("HELADO 5: " + String(conca_matrix) + " | Stock: " + String(MyStructValue.icecream4)); cont_sabor++;
         }
         break;
@@ -437,11 +389,14 @@ void switch_code(){
   conca_matrix = "";
   delay(1000);
   lcd.clear();
-  Serial.print(valor_vaso);
+
   if (valor_vaso_definitivo < cont_sabor) {   
     cont_sabor = 1;
     flag_choose_icecream=false ;
     valor_vaso_definitivo = 0;
+    Serial.println("Precio: " + String(money_vaso));
+    EEPROM.get(eeAddress, MyStructValue); MyStructValue.money += money_vaso; EEPROM.put(eeAddress, MyStructValue); 
+    money_vaso = 0.0;
     if(precio_vaso_1){
       reset();
     }
