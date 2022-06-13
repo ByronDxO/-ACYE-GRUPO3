@@ -177,6 +177,137 @@ void metodoTeclado(){
 
 Metodo encargado de mostrar el texto en la pantalla Led.
 ```c++
+int getTeclado(){
+   if (millis() > time_matrix + 10){
+    time_matrix = millis();
+
+    char key = keypad.getKey();
+    if (key) {
+      Serial.println(key);
+      lcd.setCursor(14,1);
+      lcd.print(key);
+      choose_code(key);
+      return int(key);
+      
+    }
+  }
+}
+```
+Metodo encargado de obtener el vaso que se desea seleccionar 
+```c++
+void getVaso(){
+    
+      if(bandera_vaso != true){
+      lcd.clear();    
+      }
+      if(flag_vaso == 0 ){
+        lcd.setCursor(1,0);
+      lcd.print("seleccione el");
+      lcd.setCursor(0,1);
+      lcd.print("vaso:");
+      bandera_vaso = true;
+      delay(1000);
+      }
+      
+    
+    
+    
+  
+  if(!precio_vaso_1){
+    valor_vaso = getTeclado();
+    
+    postPrecioVaso(valor_vaso);
+  }
+  getTeclado();
+  
+}
+```
+
+Metodo encargado de enviar los datos seleccionados del vaso 
+```c++
+void postPrecioVaso(char x){
+  if(!cerrar_vaso){
+    bandera_precio_vaso = true;
+  if(vaso_limpiar != true && flag_vaso==1){
+    lcd.clear();
+    vaso_limpiar=true;
+  }
+  
+  switch (x){
+        case '1':
+          valor_vaso_definitivo =1 ;
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print(x);
+          delay(1000);
+          precio_vaso_1=true;
+          lcd.clear();
+          lcd.setCursor(1,0);
+          lcd.print("precio: 20"); money_vaso = 20.0;
+          cerrar_vaso= true;
+          flag_vaso = 1;
+          delay(1500);
+          flag_choose_icecream=true ;
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print("Sabor No. " + String(cont_sabor));
+          break;
+        case '2':
+          valor_vaso_definitivo =2 ;
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print(x);
+          delay(1000);
+          precio_vaso_1=true;
+          lcd.clear();
+          lcd.setCursor(1,0);
+          lcd.print("precio: 30"); money_vaso = 30.0;
+          flag_vaso = 1;
+          delay(1500);
+          cerrar_vaso= true;
+          flag_choose_icecream=true ;
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print("Sabor No. " + String(cont_sabor));
+          break;
+        case '3':
+          valor_vaso_definitivo = 3 ;
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print(x);
+          delay(1000);
+          precio_vaso_1=true;
+          lcd.clear();
+          lcd.setCursor(1,0);
+          lcd.print("precio: 40"); money_vaso = 40.0;
+          flag_vaso = 1;
+          delay(1500);
+          cerrar_vaso= true;
+          flag_choose_icecream=true ;
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print("Sabor No. " + String(cont_sabor));
+          break;
+    }
+  }
+  
+}
+```
+
+Metodo encargado de resetear todas las banderas para poder escoger un vaso de helado nuevamente 
+```c++
+void reset(){
+      bandera_vaso = false ; 
+    
+    flag_vaso = 0 ;
+    precio_vaso_1 = false ; 
+    vaso_limpiar = false;
+    
+    cerrar_vaso = false ;
+}
+```
+Metodo encargado de obtener el char seleccionado en el teclado 
+```c++
 void metodoMensaje(){
     
   if(millis()<contador_1+1500){
@@ -201,7 +332,6 @@ void metodoMensaje(){
   }
 }
 ```
-
 
 ### APP
 
