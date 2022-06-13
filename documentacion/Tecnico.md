@@ -587,7 +587,7 @@ Al finalizar este metodo se llama al método entregar para finalizar con la ejec
 En este metodo se selecciona el motor DC que se activará dependiendo de la posicion en que se encuentre el ciclo, manteniendolo encendido por 5 segundos y luego se apaga.
 Se utiliza la funcion millis() para medir el tiempo que se mantine encendido el motor y se evita el uso de delay que detiene la ejecución de todos los porcesos.
 
-![SeleccionarDC](img/img_tomas/seleccionarDC.png)
+![SeleccionarDC](img/img_tomas/seleccionarDc.png)
 
 ### Encender led
 Este método enciende el pin de arduino dependiendo del valor que reciba como parametro, con el método digitalWrite que recibe como parametro el numero del pin de arduino y el estado que le asignamos ya sea high o low.
